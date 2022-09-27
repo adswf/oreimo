@@ -40,9 +40,9 @@ namespace Test
             foreach (string DAT in Files)
             {
                 if (File.Exists(".\\" + Path.GetFileName(DAT)))
-                    File.Delete(DAT);
+                { File.Delete(DAT); }
                 else
-                    File.Move(DAT, ".\\" + Path.GetFileName(DAT));
+                { File.Move(DAT, ".\\" + Path.GetFileName(DAT)); }
             }
         }
 
@@ -68,18 +68,16 @@ namespace Test
                 return true;
             }
             catch
-            {
-                return false;
-            }
+            { return false; }
         }
         static string[] ExtractDatContent(string DAT)
         {
             string TMPPath = string.Format(TMP, Path.GetFileName(DAT));
             if (!TMPPath.EndsWith(".dat"))
-                TMPPath += ".dat";
+            { TMPPath += ".dat"; }
 
             if (File.Exists(TMPPath))
-                File.Delete(TMPPath);
+            { File.Delete(TMPPath); }
 
             File.Move(DAT, TMPPath);
 
@@ -87,20 +85,13 @@ namespace Test
             string Filename;
 
             if (Path.GetFileName(DAT).ToLower() == "res.dat")
-            {
-                Filename = Path.GetFileName(DAT);
-            }
-
+            { Filename = Path.GetFileName(DAT); }
             else
-            {
-                Filename = Path.GetFileNameWithoutExtension(DAT);
-            }
+            { Filename = Path.GetFileNameWithoutExtension(DAT); }
 
             string NewDir = Path.GetDirectoryName(DAT) + "\\" + Filename + "\\";
             if (NewDir.StartsWith("\\"))
-            {
-                NewDir = "." + NewDir;
-            }
+            { NewDir = "." + NewDir; }
 
             var startinfo = new ProcessStartInfo("cmd.exe", "/C \".\\Workspace\\!XP.BAT\"")
             {
@@ -115,15 +106,14 @@ namespace Test
             process.StartInfo = startinfo;
             process.ErrorDataReceived += (sender, args) => {
                 if (args.Data == null)
-                    return;
+                { return; }
 
                 string Line = args.Data.Trim();
                 if (!Line.StartsWith("^"))
                 {
                     if (!Line.Contains("#") || !Line.Contains("@"))
-                    {
-                        return;
-                    }
+                    { return; }
+
                     string DFN = GetDatFN(Line.Split('#')[1].Split('@')[0].Trim('\t', ' ', ','));
                     FLIST.Add(DFN);
                     Console.Title = "Processing: " + DFN;
@@ -153,21 +143,20 @@ namespace Test
 
                 string TXT = "Y";
                 foreach (string File in FLIST.ToArray())
-                    TXT += "\r\n" + File;
+                { TXT += "\r\n" + File; }
 
                 if (FLIST.Count == 0)
                 {
                     Console.WriteLine("Something went wrong... Retrying...");
                     return ExtractDatContent(DAT);
-
                 }
 
                 string lst = GetDatLFN(DAT);
                 if (lst.StartsWith("\\"))
-                    lst = "." + lst;
+                { lst = "." + lst; }
 
                 if (File.Exists(lst))
-                    File.Delete(lst);
+                { File.Delete(lst); }
 
                 File.WriteAllText(lst, TXT);
                 LSTOrder.Add(lst);
@@ -219,7 +208,7 @@ namespace Test
                 if (!System.IO.File.Exists(File))
                 { continue; }
 
-                Console.WriteLine("Repacking {0}/{1}: {2}", ++i, Files.Length, Path.GetFileName(File));
+                Console.WriteLine($"Repacking {++i}/{Files.Length}: {Path.GetFileName(File)}");
                 RepackDat(File);
             }
 
@@ -241,9 +230,7 @@ namespace Test
                 { DatDir = '.' + DatDir; }
 
                 if (DatDir.StartsWith(".\\"))
-                {
-                    DatDir = AppDomain.CurrentDomain.BaseDirectory + DatDir.Substring(3, DatDir.Length - 3);
-                }
+                { DatDir = AppDomain.CurrentDomain.BaseDirectory + DatDir.Substring(3, DatDir.Length - 3); }
 
                 bool Escape = Directory.Exists(DatDir + DirName + "_");
 
