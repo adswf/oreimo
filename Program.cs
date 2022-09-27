@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Test
 {
@@ -13,7 +8,7 @@ namespace Test
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Toradora/Oreimo Extraction Tool");
+                Console.WriteLine("Toradora/Oreimo .dat Extraction Tool");
                 Console.WriteLine("Drag the .dat files onto this .exe");
             }
 
@@ -25,13 +20,6 @@ namespace Test
                     SaveDat(LSTS);
                 }
 
-                /*
-                else if (Path.GetFileName(arg.ToLower()) == "res.dat")
-                {
-                    Console.WriteLine("es un res");
-                }
-                */
-
                 else
                 {
                     LSTOrder = new List<string>();
@@ -41,7 +29,7 @@ namespace Test
                     File.WriteAllLines(arg + "-LstOrder.lst", LSTOrder.ToArray());
                 }
             }
-            Console.WriteLine("Press a Key To Exit");
+            Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
         }
 
@@ -66,7 +54,7 @@ namespace Test
         {
             try
             {
-                Console.WriteLine("Extracing: {0}", Path.GetFileName(DAT));
+                Console.WriteLine($"Extracing: {Path.GetFileName(DAT)}");
                 string[] Files = ExtractDatContent(DAT);
                 foreach (string File in Files)
                 {
@@ -109,8 +97,6 @@ namespace Test
             }
 
             string NewDir = Path.GetDirectoryName(DAT) + "\\" + Filename + "\\";
-            Console.WriteLine("Directoryname: " + Path.GetDirectoryName(DAT));
-            // C:\Users\adswf\Desktop\oerimo\oreimo disc 1\res.dat\
             if (NewDir.StartsWith("\\"))
             {
                 NewDir = "." + NewDir;
@@ -171,7 +157,7 @@ namespace Test
 
                 if (FLIST.Count == 0)
                 {
-                    Console.WriteLine("Something Looks Wrong... Retrying...");
+                    Console.WriteLine("Something went wrong... Retrying...");
                     return ExtractDatContent(DAT);
 
                 }
@@ -193,9 +179,7 @@ namespace Test
         }
 
         private static string GetDatFN(string file)
-        {/*
-            if (Path.GetExtension(file).ToLower() != ".dat")
-                return Path.GetFileName(file);*/
+        {
             if (Path.GetExtension(file) == string.Empty && !file.EndsWith("."))
                 file += '.';
 
@@ -233,9 +217,8 @@ namespace Test
             foreach (string File in Files)
             {
                 if (!System.IO.File.Exists(File))
-                    continue;
+                { continue; }
 
-                // Console.WriteLine("Repacking {1}/{2}: {0}", Path.GetFileName(File), ++i, Files.Length);
                 Console.WriteLine("Repacking {0}/{1}: {2}", ++i, Files.Length, Path.GetFileName(File));
                 RepackDat(File);
             }
@@ -253,9 +236,6 @@ namespace Test
                 { DirName = Path.GetFileName(DAT); }
                 else
                 { DirName = Path.GetFileNameWithoutExtension(DAT); }
-                
-                Console.WriteLine(DatDir);
-                Console.WriteLine(DirName);
 
                 if (DatDir.StartsWith("\\"))
                 { DatDir = '.' + DatDir; }
@@ -282,7 +262,7 @@ namespace Test
 
                         Directory.Move(DatDir + DirName + "_", DatDir + DirName);
                         if (Tries > 1)
-                        { Console.WriteLine($"Trying Rename Folder... Tries: {Tries}"); }
+                        { Console.WriteLine($"Trying to rename folder... Attempts: {Tries}"); }
                     }
                 }
 
@@ -305,7 +285,7 @@ namespace Test
                 {
                     if (Retry)
                     {
-                        Console.WriteLine("Something Wrong... Retrying");
+                        Console.WriteLine("Something went wrong... Retrying");
                         Debugger.Launch();
                         Debugger.Break();
                         return RepackDat(DAT, false);
