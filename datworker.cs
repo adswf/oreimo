@@ -8,8 +8,8 @@ namespace Test
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Toradora/Oreimo .dat Extraction Tool");
-                Console.WriteLine("Drag the .dat files onto this .exe");
+                Console.WriteLine("Oreimo/Toradora .dat Extraction Tool");
+                Console.WriteLine(" -Drag the RES.DAT file onto this .exe");
             }
 
             foreach (string arg in args)
@@ -54,7 +54,7 @@ namespace Test
         {
             try
             {
-                Console.WriteLine($"Extracing: {Path.GetFileName(DAT)}");
+                Console.WriteLine($"Extracting: {Path.GetFileName(DAT)}");
                 string[] Files = ExtractDatContent(DAT);
                 foreach (string File in Files)
                 {
@@ -81,9 +81,7 @@ namespace Test
 
             File.Move(DAT, TMPPath);
 
-
             string Filename;
-
             if (Path.GetFileName(DAT).ToLower() == "res.dat")
             { Filename = Path.GetFileName(DAT); }
             else
@@ -132,7 +130,6 @@ namespace Test
 
             if (Directory.Exists(".\\Workspace\\" + Filename))
             {
-
                 if (File.Exists(NewDir.TrimEnd('\\')))
                 { NewDir = NewDir.TrimEnd('\\') + "_\\"; }
 
@@ -170,7 +167,7 @@ namespace Test
         private static string GetDatFN(string file)
         {
             if (Path.GetExtension(file) == string.Empty && !file.EndsWith("."))
-                file += '.';
+            { file += '.'; }
 
             string[] Splits = Path.GetFileName(file).Split('.');
             if (Splits.Length >= 3 && int.TryParse(Splits[Splits.Length - 2], out int tmp))
@@ -179,7 +176,7 @@ namespace Test
                 for (int i = 0; i < Splits.Length; i++)
                 {
                     if (int.TryParse(Splits[i], out int TMP) && Splits[i].StartsWith("0"))
-                        continue;
+                    { continue; }
                     FN += Splits[i] + ".";
                 }
                 return FN.TrimEnd('.', ' ');
@@ -219,8 +216,8 @@ namespace Test
             try
             {
                 string DatDir = Path.GetDirectoryName(DAT) + "\\";
-                string DirName;
 
+                string DirName;
                 if (Path.GetFileName(DAT).ToLower() == "res.dat")
                 { DirName = Path.GetFileName(DAT); }
                 else
@@ -236,7 +233,6 @@ namespace Test
 
                 if (!Escape && !Directory.Exists(DatDir + DirName))
                 { return false; }
-
 
                 if (Escape)
                 {
